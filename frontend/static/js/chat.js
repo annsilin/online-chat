@@ -11,8 +11,8 @@ async function joinRoom() {
     try {
         const response = await fetch('http://localhost:5003/rooms', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name })
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name})
         });
         if (!response.ok) {
             throw new Error(`Failed to join room: ${response.status} ${response.statusText}`);
@@ -33,15 +33,15 @@ async function sendMessage() {
     const content = document.getElementById('message').value;
     console.log('Attempting to send message with roomId:', roomId, 'content:', content);
     if (!roomId || !content) {
-        console.error('Cannot send message: Missing roomId or content', { roomId, content });
+        console.error('Cannot send message: Missing roomId or content', {roomId, content});
         return;
     }
     try {
         console.log('Sending message to:', `http://localhost:5003/rooms/${roomId}/messages`);
         const response = await fetch(`http://localhost:5003/rooms/${roomId}/messages`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: userId, content })
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({user_id: userId, content})
         });
         if (!response.ok) {
             throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);

@@ -7,12 +7,17 @@
 </head>
 <body>
 <h1>Anonymous Chat</h1>
-<input type="text" id="roomName" placeholder="Room name" required>
-<button onclick="joinRoom()">Join Room</button>
+<div class="joinRoom">
+    <input type="text" id="roomName" placeholder="Room name" required>
+    <button onclick="joinRoom()">Join Room</button>
+</div>
+
 <div id="chatSection" class="hidden">
     <div id="chat"></div>
-    <input type="text" id="message" placeholder="Type a message">
-    <button onclick="sendMessage()">Send</button>
+    <div class="sendMessage">
+        <input type="text" id="message" placeholder="Type a message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
 </div>
 
 <script src="static/js/chat.js"></script>
