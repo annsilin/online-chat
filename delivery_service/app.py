@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS  # Import CORS
-from delivery_service.database import init_db, save_delivery, get_delivery_status
+from .database import init_db, save_delivery, get_delivery_status
 from datetime import datetime
 
 app = Flask(__name__)
@@ -28,4 +28,4 @@ def get_delivery(message_id):
     return jsonify({'error': 'Delivery not found'}), 404
 
 if __name__ == '__main__':
-    app.run(port=5005, debug=True)
+    app.run(host='0.0.0.0', port=5005, debug=True)

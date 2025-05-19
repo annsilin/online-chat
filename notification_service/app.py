@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS  # Import CORS
-from notification_service.database import init_db, get_notifications
+from .database import init_db, get_notifications
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:8000"}})  # Allow requests from localhost:8000
@@ -13,4 +13,4 @@ def get_all_notifications():
     return jsonify(notifications), 200
 
 if __name__ == '__main__':
-    app.run(port=5006, debug=True)
+    app.run(host='0.0.0.0', port=5006, debug=True)

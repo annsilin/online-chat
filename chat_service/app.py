@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from chat_service.database import init_db, insert_room, insert_message, get_room_messages, get_room_by_name
-from chat_service.outbox import save_event, publish_event
+from .database import init_db, insert_room, insert_message, get_room_messages, get_room_by_name
+from .outbox import save_event, publish_event
 from shared.config import RABBITMQ_HOST
 import uuid
 from datetime import datetime
@@ -92,4 +92,4 @@ def get_messages(room_id):
     return jsonify(messages), 200
 
 if __name__ == '__main__':
-    app.run(port=5003, debug=True)
+    app.run(host='0.0.0.0', port=5003, debug=True)

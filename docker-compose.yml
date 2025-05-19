@@ -1,0 +1,85 @@
+services:
+  chat-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.chat
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./chat_service/chat.db:/app/chat_service/chat.db
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - chat-network
+
+  presence-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.presence
+    ports:
+      - "5004:5004"
+    volumes:
+      - ./presence_service/presence.db:/app/presence_service/presence.db
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - chat-network
+
+  delivery-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.delivery
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./delivery_service/delivery.db:/app/delivery_service/delivery.db
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - chat-network
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.notification
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./notification_service/notification.db:/app/notification_service/notification.db
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - chat-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - chat-service
+      - presence-service
+      - notification-service
+    networks:
+      - chat-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - chat-network
+
+networks:
+  chat-network:
+    driver: bridge
