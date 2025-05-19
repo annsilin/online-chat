@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from chat_service.database import init_db, insert_room, insert_message, get_room_messages
+from chat_service.database import init_db, insert_room, insert_message, get_room_messages, get_room_by_name
 from chat_service.outbox import save_event, publish_event
 from shared.config import RABBITMQ_HOST
 import uuid
@@ -10,25 +10,31 @@ import logging
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:8000"}})
 
-# Configure logging to avoid print issues
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Initialize database
 init_db()
 
 @app.route('/rooms', methods=['POST'])
 def create_room():
     data = request.get_json()
-    room_id = str(uuid.uuid4())
     name = data.get('name', '').strip()
     name = ''.join(c for c in name if c.isprintable())
     if not name:
         return jsonify({'error': 'Room name cannot be empty or contain invalid characters'}), 400
     created_at = datetime.utcnow().isoformat()
 
+    # Check if room with this name already exists
+    existing_room = get_room_by_name(name)
+    if existing_room:
+        room_id, created_at = existing_room
+        logger.info(f"Reusing existing room: {name}, ID: {room_id}")
+        return jsonify({'room_id': room_id, 'name': name}), 200
+
+    # Create new room if it doesn't exist
+    room_id = str(uuid.uuid4())
     try:
-        logger.info(f"Creating room: {name}, ID: {room_id}")
+        logger.info(f"Creating new room: {name}, ID: {room_id}")
         insert_room(room_id, name, created_at)
         logger.info(f"Room inserted into database: {room_id}")
         event = {
