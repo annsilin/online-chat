@@ -6,12 +6,15 @@
     <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-    <h1>Anonymous Chat</h1>
-    <input type="text" id="roomName" placeholder="Room name" required>
-    <button onclick="joinRoom()">Join Room</button>
+<h1>Anonymous Chat</h1>
+<input type="text" id="roomName" placeholder="Room name" required>
+<button onclick="joinRoom()">Join Room</button>
+<div id="chatSection" class="hidden">
     <div id="chat"></div>
     <input type="text" id="message" placeholder="Type a message">
     <button onclick="sendMessage()">Send</button>
-    <script src="static/js/chat.js"></script>
+</div>
+
+<script src="static/js/chat.js"></script>
 </body>
 </html>

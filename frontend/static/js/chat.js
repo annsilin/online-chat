@@ -21,6 +21,7 @@ async function joinRoom() {
         console.log('Server response:', result);
         roomId = result.room_id;
         console.log('Set roomId to:', roomId);
+        document.getElementById('chatSection').classList.remove('hidden');
         document.getElementById('chat').innerText = `Joined room: ${result.name}\n`;
         pollMessages();
     } catch (error) {
