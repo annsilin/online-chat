@@ -1,4 +1,17 @@
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - chat-network
+
   chat-service:
     build:
       context: .
@@ -10,7 +23,8 @@ services:
     environment:
       - RABBITMQ_HOST=rabbitmq
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     networks:
       - chat-network
 
@@ -25,22 +39,8 @@ services:
     environment:
       - RABBITMQ_HOST=rabbitmq
     depends_on:
-      - rabbitmq
-    networks:
-      - chat-network
-
-  delivery-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.delivery
-    ports:
-      - "5005:5005"
-    volumes:
-      - ./delivery_service/delivery.db:/app/delivery_service/delivery.db
-    environment:
-      - RABBITMQ_HOST=rabbitmq
-    depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     networks:
       - chat-network
 
@@ -55,7 +55,8 @@ services:
     environment:
       - RABBITMQ_HOST=rabbitmq
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     networks:
       - chat-network
 
@@ -69,14 +70,6 @@ services:
       - chat-service
       - presence-service
       - notification-service
-    networks:
-      - chat-network
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
     networks:
       - chat-network
 

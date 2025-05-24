@@ -80,6 +80,11 @@ button:hover {
     display: none;
 }
 
+#chat .notification {
+    color: #0066cc;
+    font-style: italic;
+}
+
 #chat::-webkit-scrollbar {
     width: 8px;
 }

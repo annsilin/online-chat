@@ -14,8 +14,8 @@ def save_event(event_id, event_type, event):
 def publish_event(event):
     connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_HOST))
     channel = connection.channel()
-    channel.queue_declare(queue='chat_events')
+    channel.queue_declare(queue='events')
     channel.basic_publish(exchange='',
-                         routing_key='chat_events',
+                         routing_key='events',
                          body=json.dumps(event))
     connection.close()
